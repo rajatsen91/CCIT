@@ -7,8 +7,11 @@ _Functions:_
 
 1. __generate_samples_cos()__
 
-'''Generate CI,I or NI post-nonlinear samples:
+'''
+Generate CI,I or NI post-nonlinear samples:
+    
     1. Z is independent Gaussian 
+    
     2. X = cos(<a,Z> + b + noise) and Y = cos(<c,Z> + d + noise) in case of CI
     Arguments:    
         size : number of samples
@@ -28,8 +31,7 @@ _Functions:_
 '''   
 2. __parallel_cos_sample_gen()__
 '''
-Function to create several many data-sets of post-nonlinear cos transform half of which are CI and half of which are NI, 
-	along wtih the correct labels. The data-sets are stored under a given folder path:
+Function to create several many data-sets of post-nonlinear cos transform half of which are CI and half of which are NI, along with the correct labels. The data-sets are stored under a given folder path:
 
 	############## The path should exist#####################
 	For example create a folder ../data/dim20 first. 
