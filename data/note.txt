@@ -1,0 +1,1 @@
+Store all your generated data in this folder, as sub-directories. 
