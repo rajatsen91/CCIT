@@ -82,7 +82,7 @@ def generate_samples_cos(size = 1000,sType = 'CI',dx = 1,dy = 1,dz = 20,nstd = 0
         
     allsamples = np.hstack([X,Y,Z])
     
-    return allsamples
+    return np.array(allsamples)
 
 
 def cos_helper(sims):
