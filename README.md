@@ -3,7 +3,7 @@ __Classifier Conditional Independence Test: A CI test that uses a binary classif
 
 __DataGen Module__
 
-_Functions: _
+_Functions:_
 
 1. __generate_samples_cos()__
 
