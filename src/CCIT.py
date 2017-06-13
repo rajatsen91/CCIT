@@ -26,6 +26,8 @@ def CI_sampler_conditional_kNN(X_in,Y_in,Z_in,train_len = -1, k = 1):
     	X_in: Samples of r.v. X (np.array)
     	Y_in: Samples of r.v. Y (np.array)
     	Z_in: Samples of r.v. Z (np.array)
+    	train_len: length of training set, must be less than number of samples 
+    	k: k-nearest neighbor to be used: Always set k = 1. 
 
     	Xtrain: Features for training the classifier
     	Ytrain: Train Labels
