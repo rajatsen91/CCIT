@@ -7,7 +7,7 @@ _Functions:_
 
 1. __generate_samples_cos()__
 
-Generate CI,I or NI post-nonlinear samples
+####Generate CI,I or NI post-nonlinear samples
     1. Z is independent Gaussian 
     2. X = cos(<a,Z> + b + noise) and Y = cos(<c,Z> + d + noise) in case of CI
     Arguments:    
