@@ -30,6 +30,7 @@ Generate CI,I or NI post-nonlinear samples:
     [Z = [dx+dy:dx+dy+dz] coordinates of all samples]
 '''   
 2. __parallel_cos_sample_gen()__
+
 '''
 Function to create several many data-sets of post-nonlinear cos transform half of which are CI and half of which are NI, along with the correct labels. The data-sets are stored under a given folder path:
 
