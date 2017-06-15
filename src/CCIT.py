@@ -15,6 +15,8 @@ from sklearn.model_selection import KFold
 import itertools
 from sklearn.cluster import KMeans
 from sklearn.neighbors import NearestNeighbors
+
+from math import erfc
 #####################################################
 
 
@@ -202,14 +204,15 @@ def cross_validate(classifier, n_folds = 5):
     return score/n_folds
 
 
-def XGBOUT(bp, all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,nthread):
-	'''Function that takes a CI test data-set and returns classification accuracy after Nearest-Neighbor  Bootstrap'''
+def XGBOUT2(bp, all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,nthread):
+    '''Function that takes a CI test data-set and returns classification accuracy after Nearest-Neighbor  Bootstrap'''
+    
     np.random.seed()
     random.seed()
     num_samp = len(all_samples)
     I = np.random.choice(num_samp,size = num_samp, replace = True)
     samples = all_samples[I,:]
-    Xtrain,Ytrain,Xtest,Ytest,CI_data = CI_sampler_conditional_kNN(samples,train_samp,Xcoords, Ycoords, Zcoords,k)
+    Xtrain,Ytrain,Xtest,Ytest,CI_data = CI_sampler_conditional_kNN(all_samples[:,Xcoords],all_samples[:,Ycoords], all_samples[:,Zcoords],train_samp,k)
     model = xgb.XGBClassifier(nthread=nthread,learning_rate =0.02, n_estimators=bp['n_estimator'], max_depth=bp['max_depth'],min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=bp['colsample_bytree'],objective= 'binary:logistic',scale_pos_weight=1, seed=11)
     gbm = model.fit(Xtrain,Ytrain)
     pred = gbm.predict_proba(Xtest)
@@ -228,24 +231,43 @@ def XGBOUT(bp, all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,nthr
     else:
         return [1.0, AUC1 - AUC2, AUC2 - 0.5, acc1 - acc2, acc2 - 0.5]
 
+def pvalue(x,sigma):
+
+    return 0.5*erfc(x/(sigma*np.sqrt(2)))
 
 
-def bootstrap_XGB2(max_depths, n_estimators, colsample_bytrees,nfold,feature_selection,all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,num_iter):
-    Xtrain,Ytrain,Xtest,Ytest,CI_data = CI_sampler_conditional_kNN(all_samples,train_samp,Xcoords, Ycoords, Zcoords,k)
+
+def bootstrap_XGB2(max_depths, n_estimators, colsample_bytrees,nfold,feature_selection,all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,num_iter,nthread):
+    Xtrain,Ytrain,Xtest,Ytest,CI_data = CI_sampler_conditional_kNN(all_samples[:,Xcoords],all_samples[:,Ycoords], all_samples[:,Zcoords],train_samp,k)
     model,features,bp = XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,Ytrain,nfold,feature_selection = 0)
     del model
     cleaned = []
     for i in range(num_iter):
-        cleaned = cleaned + [XGBOUT2(bp, all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold)]
+        cleaned = cleaned + [XGBOUT2(bp, all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,nthread)]
     cleaned = np.array(cleaned)
     R = np.mean(cleaned,axis = 0)
     S = np.std(cleaned,axis = 0)
-    print S
+    #print S
     s = S[2]
+    s2 = S[4]
     new_t = s
-    print new_t
+    new_t2 = s2
+    #print new_t
     a = np.where(cleaned[:,1] < new_t)
+    a2 = np.where(cleaned[:,3] < new_t2)
     R = list(R)
     R = R + [float(len(a[0]))/num_iter]
-    return R
+    R = R + [float(len(a2[0]))/num_iter]
+    pval = pd.Series(cleaned[:,3]).apply(lambda g: pvalue(g,s2))
+    R = R + [np.mean(pval)]
+    dic = {}
+    dic['tr_auc_CI'] = R[0]
+    dic['auc_difference'] = R[1]
+    dic['auc2_deviation'] = R[2]
+    dic['acc_difference'] = R[3]
+    dic['acc_deviation'] = R[4]
+    dic['autotr_auc_CI'] = R[5]
+    dic['autotr_acc_CI'] = R[6]
+    dic['pval'] = R[7]
+    return dic
     
