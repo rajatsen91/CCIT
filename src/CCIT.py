@@ -116,7 +116,7 @@ def CI_sampler_conditional_kNN(X_in,Y_in,Z_in,train_len = -1, k = 1):
 
 
 
-def XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,Ytrain,nfold,feature_selection = 0):
+def XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,Ytrain,nfold,feature_selection = 0,nthread = 8):
     '''Function returns a cross-validated hyper parameter tuned model for the training data 
     Arguments:
     	max_depths: options for maximum depth eg: input [6,10,13], this will choose the best max_depth among the three
@@ -134,7 +134,7 @@ def XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,
     This procedure is CPU intensive. So, it is advised to not provide too many choices of hyper-parameters
     '''
     classifiers = {}
-    model =  xgb.XGBClassifier( nthread=32, learning_rate =0.02, n_estimators=100, max_depth=6,min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=0.8,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
+    model =  xgb.XGBClassifier( nthread=nthread, learning_rate =0.02, n_estimators=100, max_depth=6,min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=0.8,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
     model.fit(Xtrain,Ytrain)
     m,n = Xtrain.shape
     features = range(n)
@@ -144,13 +144,13 @@ def XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,
         Xtrain = Xtrain[:,features]
     
     bp = {'max_depth':[0],'n_estimator':[0], 'colsample_bytree' : [0] }
-    classifiers['model'] = xgb.XGBClassifier( learning_rate =0.02, n_estimators=100, max_depth=6,min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=0.9,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
+    classifiers['model'] = xgb.XGBClassifier( nthread = nthread, learning_rate =0.02, n_estimators=100, max_depth=6,min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=0.9,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
     classifiers['train_X'] = Xtrain
     classifiers['train_y'] = Ytrain
     maxi = 0
     pos = 0
     for r in max_depths:
-        classifiers['model'] = xgb.XGBClassifier( nthread=32,learning_rate =0.02, n_estimators=100, max_depth=r,min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=0.8,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
+        classifiers['model'] = xgb.XGBClassifier( nthread=nthread,learning_rate =0.02, n_estimators=100, max_depth=r,min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=0.8,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
         score = cross_validate(classifiers,nfold)
         if maxi < score:
             maxi = score
@@ -161,7 +161,7 @@ def XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,
     maxi = 0
     pos = 0
     for r in n_estimators:
-        classifiers['model'] = xgb.XGBClassifier( nthread=32,learning_rate =0.02, n_estimators=r, max_depth=bp['max_depth'],min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=0.8,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
+        classifiers['model'] = xgb.XGBClassifier( nthread=nthread,learning_rate =0.02, n_estimators=r, max_depth=bp['max_depth'],min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=0.8,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
         score = cross_validate(classifiers,nfold)
         if maxi < score:
             maxi = score
@@ -173,14 +173,14 @@ def XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,
     maxi = 0
     pos = 0
     for r in colsample_bytrees:
-        classifiers['model'] = xgb.XGBClassifier( nthread=32, learning_rate =0.02, n_estimators=bp['n_estimator'], max_depth=bp['max_depth'],min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=r,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
+        classifiers['model'] = xgb.XGBClassifier( nthread=nthread, learning_rate =0.02, n_estimators=bp['n_estimator'], max_depth=bp['max_depth'],min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=r,objective= 'binary:logistic',scale_pos_weight=1, seed=11)
         score = cross_validate(classifiers,nfold)
         if maxi < score:
             maxi = score
             pos = r
             
     bp['colsample_bytree'] = pos
-    model = xgb.XGBClassifier( nthread=32,learning_rate =0.02, n_estimators=bp['n_estimator'], max_depth=bp['max_depth'],min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=bp['colsample_bytree'],objective= 'binary:logistic',scale_pos_weight=1, seed=11).fit(Xtrain,Ytrain)
+    model = xgb.XGBClassifier( nthread=nthread,learning_rate =0.02, n_estimators=bp['n_estimator'], max_depth=bp['max_depth'],min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=bp['colsample_bytree'],objective= 'binary:logistic',scale_pos_weight=1, seed=11).fit(Xtrain,Ytrain)
     
     return model,features,bp
 
@@ -239,7 +239,7 @@ def pvalue(x,sigma):
 
 def bootstrap_XGB2(max_depths, n_estimators, colsample_bytrees,nfold,feature_selection,all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,num_iter,nthread):
     Xtrain,Ytrain,Xtest,Ytest,CI_data = CI_sampler_conditional_kNN(all_samples[:,Xcoords],all_samples[:,Ycoords], all_samples[:,Zcoords],train_samp,k)
-    model,features,bp = XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,Ytrain,nfold,feature_selection = 0)
+    model,features,bp = XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,Ytrain,nfold,feature_selection = 0,nthread)
     del model
     cleaned = []
     for i in range(num_iter):
