@@ -239,7 +239,7 @@ def pvalue(x,sigma):
 
 def bootstrap_XGB2(max_depths, n_estimators, colsample_bytrees,nfold,feature_selection,all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,num_iter,nthread):
     Xtrain,Ytrain,Xtest,Ytest,CI_data = CI_sampler_conditional_kNN(all_samples[:,Xcoords],all_samples[:,Ycoords], all_samples[:,Zcoords],train_samp,k)
-    model,features,bp = XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,Ytrain,nfold,feature_selection = 0,nthread)
+    model,features,bp = XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,Ytrain,nfold,feature_selection = 0,nthread = nthread)
     del model
     cleaned = []
     for i in range(num_iter):
@@ -270,4 +270,53 @@ def bootstrap_XGB2(max_depths, n_estimators, colsample_bytrees,nfold,feature_sel
     dic['autotr_acc_CI'] = R[6]
     dic['pval'] = R[7]
     return dic
+
+def CCIT(X,Y,Z,max_depths = [6,10,13], n_estimators=[100,200,300], colsample_bytrees=[0.8],nfold = 5,feature_selection = 0,train_samp = -1,k = 1,threshold = 0.03,num_iter = 10,nthread = 8):
+    '''Main function to generate pval of the CI test. If pval is low CI is rejected if its high we fail to reject CI.
+        X: Input X table
+        Y: Input Y table
+        Z: Input Z table
+        Optional Arguments:
+        max_depths : eg. [6,10,13] list of parameters for depth of tree in xgb for tuning
+        n_estimators: eg. [100,200,300] list of parameters for number of estimators for xgboost for tuning
+        colsample_bytrees: eg. recommended [0.8] list of parameters for colsample_bytree for xgboost for tuning
+        nfold: n-fold cross validation 
+        feature_selection : default 0 recommended
+        train_samp: -1 recommended. Number of examples out of total to be used for training. 
+        threshold: defualt recommended
+        num_iter: Number of Bootstrap Iterations. Default 10. Recommended 30. 
+        nthread: Number of parallel thread for running XGB. Recommended number of cores in the CPU. Default 8. 
+
+        Output: 
+        pvalue of the test. 
+     '''
+
+
+    assert (type(X) == np.ndarray),"Not an array"
+    assert (type(Y) == np.ndarray),"Not an array"
+    assert (type(Z) == np.ndarray),"Not an array"
+    
+    nx,dx = X.shape
+    ny,dy = Y.shape
+    nz,dz = Z.shape 
+
+    assert (nx == ny), "Dimension Mismatch"
+    assert (nz == ny), "Dimension Mismatch"
+    assert (nx == nz), "Dimension Mismatch"
+
+    all_samples = np.hstack([X,Y,Z])
+    #print all_samples.shape
+
+    Xset = range(0,dx)
+    Yset = range(dx,dx + dy)
+    Zset = range(dx + dy,dx + dy + dz)
+
+    if train_samp == -1:
+        train_len = (2*nx)/3
+
+    #print train_len
+
+    dic = bootstrap_XGB2(max_depths = max_depths, n_estimators=n_estimators, colsample_bytrees=colsample_bytrees,nfold=nfold,feature_selection=0,all_samples=all_samples,train_samp = train_len,Xcoords = Xset, Ycoords = Yset, Zcoords = Zset ,k = k,threshold = threshold,num_iter = num_iter,nthread = nthread)
+
+    return dic['pval']
     
