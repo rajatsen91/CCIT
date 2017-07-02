@@ -10,7 +10,7 @@ __Usage for private pip install__
 
 3. ```pip install . ```
 
-4. Now in youyr python script:
+4. Now in your python script:
 
 ```
 from CCIT import *
