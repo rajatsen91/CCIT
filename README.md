@@ -1,6 +1,72 @@
 # CCIT
 __Classifier Conditional Independence Test: A CI test that uses a binary classifier (XGBoost) for CI testing__
 
+
+__Usage for private pip install__
+
+1. clone the repo. 
+
+2. ```cd CCIT ```
+
+3. ```pip install . ```
+
+4. Now in youyr python script:
+
+```
+from CCIT import *
+
+pvalue = CCIT(X,Y,Z)
+
+```
+
+
+__CI Tester__
+
+_Functions:_
+
+1. __CCIT()__
+
+```
+Main function to generate pval of the CI test. If pval is low CI is rejected if its high we fail to reject CI.
+        X: Input X table
+        Y: Input Y table
+        Z: Input Z table
+        Optional Arguments:
+        max_depths : eg. [6,10,13] list of parameters for depth of tree in xgb for tuning
+        n_estimators: eg. [100,200,300] list of parameters for number of estimators for xgboost for tuning
+        colsample_bytrees: eg. recommended [0.8] list of parameters for colsample_bytree for xgboost for tuning
+        nfold: n-fold cross validation 
+        feature_selection : default 0 recommended
+        train_samp: -1 recommended. Number of examples out of total to be used for training. 
+        threshold: defualt recommended
+        num_iter: Number of Bootstrap Iterations. Default 10. Recommended 30. 
+        nthread: Number of parallel thread for running XGB. Recommended number of cores in the CPU. Default 8. 
+
+        Output: 
+        pvalue of the test. 
+     
+```
+
+2. __CI_sampler_conditional_kNN()__
+
+```
+Generate Test and Train set for converting CI testing into Binary Classification
+    Arguments:
+    	X_in: Samples of r.v. X (np.array)
+    	Y_in: Samples of r.v. Y (np.array)
+    	Z_in: Samples of r.v. Z (np.array)
+    	train_len: length of training set, must be less than number of samples 
+    	k: k-nearest neighbor to be used: Always set k = 1. 
+    Output:
+    	Xtrain: Features for training the classifier
+    	Ytrain: Train Labels
+    	Xtest: Features for test set
+    	Ytest: Test Labels
+    	CI_data: Developer Use only
+
+```
+
+
 __DataGen Module__
 
 _Functions:_
