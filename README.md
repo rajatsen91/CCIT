@@ -10,7 +10,14 @@ __Usage for private pip install__
 
 3. ```pip install . ```
 
-4. Now in your python script:
+4. (Optional) from the root directory of the package, run the command 
+
+```
+nosetests
+```
+
+This is a comprehensive test and may take some time to run. 
+5. Now in your python script:
 
 ```
 from CCIT import *
