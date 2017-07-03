@@ -304,6 +304,8 @@ def CCIT(X,Y,Z,max_depths = [6,10,13], n_estimators=[100,200,300], colsample_byt
     assert (nz == ny), "Dimension Mismatch"
     assert (nx == nz), "Dimension Mismatch"
 
+    assert (num_iter <= 1), "Please provide num_iter > 1."
+
     all_samples = np.hstack([X,Y,Z])
     #print all_samples.shape
 
