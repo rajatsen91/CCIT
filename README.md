@@ -17,6 +17,7 @@ nosetests
 ```
 
 This is a comprehensive test and may take some time to run. 
+
 5. Now in your python script:
 
 ```
