@@ -47,12 +47,29 @@ Main function to generate pval of the CI test. If pval is low CI is rejected if 
         feature_selection : default 0 recommended
         train_samp: -1 recommended. Number of examples out of total to be used for training. 
         threshold: defualt recommended
-        num_iter: Number of Bootstrap Iterations. Default 10. Recommended 30. 
+        num_iter: Number of Bootstrap Iterations. Default 20. Recommended 30. 
         nthread: Number of parallel thread for running XGB. Recommended number of cores in the CPU. Default 8. 
 
         Output: 
         pvalue of the test. 
      
+```
+
+__tl;dr version__
+
+```
+If the dimensions of X, Y, and Z are 1,1,2 respectively and if the first three i.i.d samples are as follows:
+
+|  X  | Y   |    Z    |
+| 1.0 | 1.0 | 1.5 2.5 |
+| 0.5 | 1.2 | 0.5 0.6 |
+| 0.1 | 4.5 | 1.2 3.6 |
+
+then the input is: 
+X = np.array([[1.0],[0.5],[0.1]])
+Y = np.array([[1.0],[1.2],[4.5]])
+Z = np.array([[1.5,2.5],[0.5,0.6],[1.2,3.6]])
+pval = CCIT(X,Y,Z)
 ```
 
 2. __CI_sampler_conditional_kNN()__

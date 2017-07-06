@@ -259,6 +259,7 @@ def bootstrap_XGB2(max_depths, n_estimators, colsample_bytrees,nfold,feature_sel
     R = R + [float(len(a[0]))/num_iter]
     R = R + [float(len(a2[0]))/num_iter]
     pval = pd.Series(cleaned[:,3]).apply(lambda g: pvalue(g,s2))
+    #pval = pd.Series(cleaned[:,1]).apply(lambda g: pvalue(g,s))
     R = R + [np.mean(pval)]
     dic = {}
     dic['tr_auc_CI'] = R[0]
