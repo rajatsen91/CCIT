@@ -58,7 +58,7 @@ Main function to generate pval of the CI test. If pval is low CI is rejected if 
 __tl;dr version__
 
 ```
-If the dimensions of X, Y, and Z are 1,1,3 respectively and if the first three i.i.d samples are as follows:
+If the dimensions of X, Y, and Z are 1,1,2 respectively and if the first three i.i.d samples are as follows:
 
 |  X  | Y   |    Z    |
 | 1.0 | 1.0 | 1.5 2.5 |
