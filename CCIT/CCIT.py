@@ -271,7 +271,7 @@ def bootstrap_XGB2(max_depths, n_estimators, colsample_bytrees,nfold,feature_sel
     dic['pval'] = R[7]
     return dic
 
-def CCIT(X,Y,Z,max_depths = [6,10,13], n_estimators=[100,200,300], colsample_bytrees=[0.8],nfold = 5,feature_selection = 0,train_samp = -1,k = 1,threshold = 0.03,num_iter = 10,nthread = 8):
+def CCIT(X,Y,Z,max_depths = [6,10,13], n_estimators=[100,200,300], colsample_bytrees=[0.8],nfold = 5,feature_selection = 0,train_samp = -1,k = 1,threshold = 0.03,num_iter = 20,nthread = 8):
     '''Main function to generate pval of the CI test. If pval is low CI is rejected if its high we fail to reject CI.
         X: Input X table
         Y: Input Y table
