@@ -13,8 +13,10 @@ class TestCCIT(TestCase):
 
     def test_CCIT(self):
         allsamples = generate_samples_cos()
-        pval = CCIT(allsamples[:,0:1],allsamples[:,1:2],allsamples[:,2:22])
+        pval = CCIT(allsamples[:,0:1],allsamples[:,1:2],allsamples[:,2:22],bootstrap = False)
+        pval2 = CCIT(allsamples[:,0:1],allsamples[:,1:2],allsamples[:,2:22],bootstrap = True)
         print 'pvalue: ' + str(pval)
         self.assertTrue(pval <= 1)
+        self.assertTrue(pval2 <= 1)
 
         

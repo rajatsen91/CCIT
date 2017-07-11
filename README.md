@@ -49,7 +49,7 @@ Main function to generate pval of the CI test. If pval is low CI is rejected if 
         threshold: defualt recommended
         num_iter: Number of Bootstrap Iterations. Default 20. Recommended 30. 
         nthread: Number of parallel thread for running XGB. Recommended number of cores in the CPU. Default 8. 
-
+	bootstrap : True or False. If False, then num_iter is set to 1. One deterministic pval is outputted without averaging. If True, results are averaged over num_iter bootstraps and can have randomness. num_iter in this case has to be >= 20.   
         Output: 
         pvalue of the test. 
      
