@@ -17,6 +17,7 @@ from sklearn.cluster import KMeans
 from sklearn.neighbors import NearestNeighbors
 
 from math import erfc
+import random
 #####################################################
 
 
@@ -207,10 +208,10 @@ def cross_validate(classifier, n_folds = 5):
 def XGBOUT2(bp, all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,nthread,bootstrap = True):
     '''Function that takes a CI test data-set and returns classification accuracy after Nearest-Neighbor  Bootstrap'''
     
-    np.random.seed()
-    random.seed()
     num_samp = len(all_samples)
     if bootstrap:
+        np.random.seed()
+        random.seed()
         I = np.random.choice(num_samp,size = num_samp, replace = True)
         samples = all_samples[I,:]
     else:
@@ -241,6 +242,7 @@ def pvalue(x,sigma):
 
 
 def bootstrap_XGB2(max_depths, n_estimators, colsample_bytrees,nfold,feature_selection,all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,num_iter,nthread, bootstrap = False):
+    np.random.seed(11)
     Xtrain,Ytrain,Xtest,Ytest,CI_data = CI_sampler_conditional_kNN(all_samples[:,Xcoords],all_samples[:,Ycoords], all_samples[:,Zcoords],train_samp,k)
     model,features,bp = XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,Ytrain,nfold,feature_selection = 0,nthread = nthread)
     ntot,dtot = all_samples.shape
