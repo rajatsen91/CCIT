@@ -1,6 +1,20 @@
 # CCIT
 __Classifier Conditional Independence Test: A CI test that uses a binary classifier (XGBoost) for CI testing__
 
+__Usage for pip install__
+
+1. pip install CCIT or sudo -H pip install CCIT
+
+2. Now in your python script:
+
+```
+from CCIT import *
+
+pvalue = CCIT(X,Y,Z)
+
+```
+
+
 
 __Usage for pip install from github repo__
 
