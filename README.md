@@ -2,7 +2,7 @@
 __Classifier Conditional Independence Test: A CI test that uses a binary classifier (XGBoost) for CI testing__
 
 
-__Usage for private pip install__
+__Usage for pip install from github repo__
 
 1. clone the repo. 
 
