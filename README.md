@@ -10,7 +10,9 @@ __Usage for pip install__
 ```
 from CCIT import *
 
-pvalue = CCIT(X,Y,Z)
+pvalue = CCIT(X,Y,Z)    #without bootstrap
+
+pvalue = CCIT(X,Y,Z,num_iter = 30, bootstrap = True, nthread = 20)  #with 30 bootstrap iterations and 20 threads in parallel. 
 
 ```
 
