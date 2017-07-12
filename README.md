@@ -82,6 +82,8 @@ If the dimensions of X, Y, and Z are 1,1,2 respectively and if the first three i
 | 0.1 | 4.5 | 1.2 3.6 |
 
 then the input is: 
+```
+```python
 X = np.array([[1.0],[0.5],[0.1]])
 Y = np.array([[1.0],[1.2],[4.5]])
 Z = np.array([[1.5,2.5],[0.5,0.6],[1.2,3.6]])
