@@ -7,7 +7,7 @@ __Usage for pip install__
 
 2. Now in your python script:
 
-```
+```python
 from CCIT import *
 
 pvalue = CCIT(X,Y,Z)    #without bootstrap
