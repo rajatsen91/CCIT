@@ -3,7 +3,7 @@ __Classifier Conditional Independence Test: A CI test that uses a binary classif
 
 __Usage for pip install__
 
-1. pip install CCIT or sudo -H pip install CCIT
+1. ```pip install CCIT``` or ```sudo -H pip install CCIT```.
 
 2. Now in your python script:
 
