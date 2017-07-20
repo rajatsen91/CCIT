@@ -17,7 +17,7 @@ pvalue = CCIT(X,Y,Z,num_iter = 30, bootstrap = True, nthread = 20)  #with 30 boo
 
 ```
 
-Note that when ```python Z is None ```, it produces a pvalue for independence test between X and Y.  
+Note that when ```Z is None ```, it produces a pvalue for independence test between X and Y.  
 
 __Usage for pip install from github repo__
 
