@@ -14,9 +14,10 @@ pvalue = CCIT(X,Y,Z)    #without bootstrap
 
 pvalue = CCIT(X,Y,Z,num_iter = 30, bootstrap = True, nthread = 20)  #with 30 bootstrap iterations and 20 threads in parallel. 
 
+
 ```
 
-
+Note that when ```python Z is None ```, it produces a pvalue for independence test between X and Y.  
 
 __Usage for pip install from github repo__
 
@@ -54,7 +55,7 @@ _Functions:_
 Main function to generate pval of the CI test. If pval is low CI is rejected if its high we fail to reject CI.
         X: Input X table
         Y: Input Y table
-        Z: Input Z table
+        Z: Input Z table. If None then it reverts back to Independence test between X and Y. 
         Optional Arguments:
         max_depths : eg. [6,10,13] list of parameters for depth of tree in xgb for tuning
         n_estimators: eg. [100,200,300] list of parameters for number of estimators for xgboost for tuning
