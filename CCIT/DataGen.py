@@ -50,7 +50,8 @@ def generate_samples_cos(size = 1000,sType = 'CI',dx = 1,dy = 1,dz = 20,nstd = 0
     [Y = [dx:dx + dy] coordinates of allsamples]
     [Z = [dx+dy:dx+dy+dz] coordinates of all samples]
     '''
-    
+    np.random.seed()
+    random.seed()
     num = size
     cov = np.eye(dz)
     mu = np.ones(dz)
