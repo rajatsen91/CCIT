@@ -39,6 +39,30 @@ def CI_sampler_conditional_kNN(X_in,Y_in,Z_in,train_len = -1, k = 1):
     	CI_data: Developer Use only
 
     '''
+
+    if Z_in is None:
+        assert (type(X_in) == np.ndarray),"Not an array"
+        assert (type(Y_in) == np.ndarray),"Not an array"
+        nx,dx = X_in.shape
+        ny,dy = Y_in.shape
+        assert (nx == ny), "Dimension Mismatch"
+
+        if train_len == -1:
+            train_len = 2*len(X_in)/3
+
+        X_tr = X_in[0:train_len,:]
+        Y_tr = Y_in[0:train_len,:]
+
+        X_te = X_in[train_len::,:]
+        Y_te = Y_in[train_len::,:]
+
+        Xtrain,Ytrain = create_Itest_data(X_tr,Y_tr)
+        Xtest,Ytest = create_Itest_data(X_te,Y_te)
+
+        return Xtrain,Ytrain,Xtest,Ytest,None
+
+
+
     assert (type(X_in) == np.ndarray),"Not an array"
     assert (type(Y_in) == np.ndarray),"Not an array"
     assert (type(Z_in) == np.ndarray),"Not an array"
@@ -114,6 +138,34 @@ def CI_sampler_conditional_kNN(X_in,Y_in,Z_in,train_len = -1, k = 1):
     
     
     return Xtrain,Ytrain,Xtest,Ytest,CI_data
+
+
+def create_Itest_data(X,Y):
+    nx = len(X)
+    hx = nx/2
+    
+    I = np.random.choice(nx,size = hx, replace=False)
+    S = set(range(nx))
+    S = S.difference(set(I))
+    S = list(S)
+    
+    X1 = X[I,:]
+    X2 = X[S,:]
+    
+    Y1 = Y[I,:]
+    Y2 = Y[S,:]
+    
+    train1 = np.hstack([X1,Y1,np.ones([len(X1),1])])
+    train2 = np.hstack([X2,Y2[np.random.permutation(len(Y2)),:],np.zeros([len(Y2),1])])
+    
+    train = np.vstack([train1,train2])
+    
+    train = train[np.random.permutation(len(train)),:]
+    n,m = train.shape
+    Xtrain = train[:,0:m-1]
+    Ytrain = train[:,m-1]
+    
+    return Xtrain,Ytrain
 
 
 
@@ -235,9 +287,68 @@ def XGBOUT2(bp, all_samples,train_samp,Xcoords, Ycoords, Zcoords,k,threshold,nth
     else:
         return [1.0, AUC1 - AUC2, AUC2 - 0.5, acc1 - acc2, acc2 - 0.5]
 
+
+def XGBOUT_Independence(bp, all_samples,train_samp,Xcoords, Ycoords, k,threshold,nthread,bootstrap = True):
+    '''Function that takes a CI test data-set and returns classification accuracy after Nearest-Neighbor  Bootstrap'''
+    
+    num_samp = len(all_samples)
+    if bootstrap:
+        np.random.seed()
+        random.seed()
+        I = np.random.choice(num_samp,size = num_samp, replace = True)
+        samples = all_samples[I,:]
+    else:
+        samples = all_samples
+    Xtrain,Ytrain,Xtest,Ytest,CI_data = CI_sampler_conditional_kNN(all_samples[:,Xcoords],all_samples[:,Ycoords], None,train_samp,k)
+    s1,s2 = Xtrain.shape
+    if s2 >= 4:
+        model = xgb.XGBClassifier(nthread=nthread,learning_rate =0.02, n_estimators=bp['n_estimator'], max_depth=bp['max_depth'],min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=bp['colsample_bytree'],objective= 'binary:logistic',scale_pos_weight=1, seed=11)
+    else:
+        model = xgb.XGBClassifier() 
+    gbm = model.fit(Xtrain,Ytrain)
+    pred = gbm.predict_proba(Xtest)
+    pred_exact = gbm.predict(Xtest)
+    acc1 = accuracy_score(Ytest, pred_exact)
+    AUC1 = roc_auc_score(Ytest,pred[:,1])
+    del gbm
+    if AUC1 > 0.5 + threshold:
+        return [0.0, AUC1 - 0.5 , acc1- 0.5]
+    else:
+        return [1.0, AUC1 - 0.5 , acc1- 0.5]
+
+
 def pvalue(x,sigma):
 
     return 0.5*erfc(x/(sigma*np.sqrt(2)))
+
+
+
+def bootstrap_XGB_Independence(max_depths, n_estimators, colsample_bytrees,nfold,feature_selection,all_samples,train_samp,Xcoords, Ycoords, k,threshold,num_iter,nthread, bootstrap = False):
+    np.random.seed(11)
+    Xtrain,Ytrain,Xtest,Ytest,CI_data = CI_sampler_conditional_kNN(all_samples[:,Xcoords],all_samples[:,Ycoords], None,train_samp,k)
+    model,features,bp = XGB_crossvalidated_model(max_depths, n_estimators, colsample_bytrees,Xtrain,Ytrain,nfold,feature_selection = 0,nthread = nthread)
+    ntot,dtot = all_samples.shape
+    del model
+    cleaned = []
+    if bootstrap:
+        assert (num_iter >= 20),"Number of bootstrap iteration should be atleast 20."
+    if bootstrap == False:
+        num_iter = 1
+    for i in range(num_iter):
+        r = XGBOUT_Independence(bp, all_samples,train_samp,Xcoords, Ycoords,k,threshold,nthread,bootstrap)
+        cleaned = cleaned + [r]
+    cleaned = np.array(cleaned)
+    R = np.mean(cleaned,axis = 0)
+    S = np.std(cleaned,axis = 0)
+    p = R[2]
+    s2 = S[2]
+    if bootstrap:
+        pval = pvalue(p,s2)
+    else:
+        pval = pvalue(p,1/np.sqrt(ntot))
+    dic = {}
+    dic['pval'] = pval
+    return dic
 
 
 
@@ -307,7 +418,23 @@ def CCIT(X,Y,Z,max_depths = [6,10,13], n_estimators=[100,200,300], colsample_byt
         pvalue of the test. 
      '''
 
+    if Z is None:
+        print 'Reverting Back to Independence Testing'
+        assert (type(X) == np.ndarray),"Not an array"
+        assert (type(Y) == np.ndarray),"Not an array"
+        nx,dx = X.shape
+        ny,dy = Y.shape
+        assert (nx == ny), "Dimension Mismatch"
+        assert (num_iter > 1), "Please provide num_iter > 1."
+        all_samples = np.hstack([X,Y])
+        Xset = range(0,dx)
+        Yset = range(dx,dx + dy)
+        if train_samp == -1:
+            train_len = (2*nx)/3
 
+        dic = bootstrap_XGB_Independence(max_depths = max_depths, n_estimators=n_estimators, colsample_bytrees=colsample_bytrees,nfold=nfold,feature_selection=0,all_samples=all_samples,train_samp = train_len,Xcoords = Xset, Ycoords = Yset,k = k,threshold = threshold,num_iter = num_iter,nthread = nthread,bootstrap = bootstrap)
+        return dic['pval']
+    
     assert (type(X) == np.ndarray),"Not an array"
     assert (type(Y) == np.ndarray),"Not an array"
     assert (type(Z) == np.ndarray),"Not an array"
