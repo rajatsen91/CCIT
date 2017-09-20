@@ -1,5 +1,7 @@
 # CCIT
 __Classifier Conditional Independence Test: A CI test that uses a binary classifier (XGBoost) for CI testing__
+__This is an implementation of this paper: https://arxiv.org/abs/1709.06138__
+_Please cite the above paper if this package is used in any publication._ 
 
 __Usage for pip install__
 
