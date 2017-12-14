@@ -47,7 +47,7 @@ from CCIT import *
 pvalue = CCIT(X,Y,Z)
 
 ```
-There may be some trouble in installing the xgboost dependency. In that case it is recommended to follow the steps in https://github.com/dmlc/xgboost/blob/master/python-package/build_trouble_shooting.md for install xgboost first. Then install CCIT from pip. 
+There may be some trouble in installing the xgboost dependency. In that case it is recommended to follow the steps in https://github.com/dmlc/xgboost/blob/master/python-package/build_trouble_shooting.md for installing xgboost first. Then install CCIT from pip. 
 
 __CI Tester__
 
