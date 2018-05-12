@@ -23,6 +23,8 @@ pvalue = CCIT(X,Y,Z,num_iter = 30, bootstrap = True, nthread = 20)  #with 30 boo
 
 Note that when ```Z is None ```, it produces a pvalue for independence test between X and Y.  
 
+__It is recommended to recale all columns of the data by standard deviation__
+
 __Usage for pip install from github repo__
 
 1. clone the repo. 
