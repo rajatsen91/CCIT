@@ -21,6 +21,8 @@ pvalue = CCIT(X,Y,Z,num_iter = 30, bootstrap = True, nthread = 20)  #with 30 boo
 
 ```
 
+__ We suggest normalizing each column of the data either standard normalization or bringing all values in each column in the range [0,1], for the best performance__
+
 Note that when ```Z is None ```, it produces a pvalue for independence test between X and Y.  
 
 __It is recommended to recale all columns of the data by standard deviation__
