@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 #General Headers####################
 import numpy as np
 import pandas as pd
@@ -20,6 +22,7 @@ from math import erfc
 import random
 #####################################################
 
+from CCIT.DataGen import *
 
 
 
@@ -48,7 +51,7 @@ def CI_sampler_conditional_kNN(X_in,Y_in,Z_in,train_len = -1, k = 1):
         assert (nx == ny), "Dimension Mismatch"
 
         if train_len == -1:
-            train_len = 2*len(X_in)/3
+            train_len = int(2*len(X_in)/3)
 
         X_tr = X_in[0:train_len,:]
         Y_tr = Y_in[0:train_len,:]
@@ -82,7 +85,7 @@ def CI_sampler_conditional_kNN(X_in,Y_in,Z_in,train_len = -1, k = 1):
     Zset = range(dx + dy,dx + dy + dz)
     
     if train_len == -1:
-    	train_len = 2*len(X_in)/3
+    	train_len = int(2*len(X_in)/3)
 
     assert (train_len < nx), "Training length cannot be larger than total length"
 
@@ -142,7 +145,7 @@ def CI_sampler_conditional_kNN(X_in,Y_in,Z_in,train_len = -1, k = 1):
 
 def create_Itest_data(X,Y):
     nx = len(X)
-    hx = nx/2
+    hx = int(nx/2)
     
     I = np.random.choice(nx,size = hx, replace=False)
     S = set(range(nx))
@@ -419,7 +422,7 @@ def CCIT(X,Y,Z,max_depths = [6,10,13], n_estimators=[100,200,300], colsample_byt
      '''
 
     if Z is None:
-        print 'Reverting Back to Independence Testing'
+        print('Reverting Back to Independence Testing')
         assert (type(X) == np.ndarray),"Not an array"
         assert (type(Y) == np.ndarray),"Not an array"
         nx,dx = X.shape
@@ -430,7 +433,7 @@ def CCIT(X,Y,Z,max_depths = [6,10,13], n_estimators=[100,200,300], colsample_byt
         Xset = range(0,dx)
         Yset = range(dx,dx + dy)
         if train_samp == -1:
-            train_len = (2*nx)/3
+            train_len = int((2*nx)/3)
 
         dic = bootstrap_XGB_Independence(max_depths = max_depths, n_estimators=n_estimators, colsample_bytrees=colsample_bytrees,nfold=nfold,feature_selection=0,all_samples=all_samples,train_samp = train_len,Xcoords = Xset, Ycoords = Yset,k = k,threshold = threshold,num_iter = num_iter,nthread = nthread,bootstrap = bootstrap)
         return dic['pval']
@@ -457,7 +460,7 @@ def CCIT(X,Y,Z,max_depths = [6,10,13], n_estimators=[100,200,300], colsample_byt
     Zset = range(dx + dy,dx + dy + dz)
 
     if train_samp == -1:
-        train_len = (2*nx)/3
+        train_len = int((2*nx)/3)
 
     #print train_len
 

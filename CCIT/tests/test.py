@@ -1,13 +1,15 @@
+from __future__ import print_function
 from unittest import TestCase
 
-from CCIT import *
+from CCIT.CCIT import *
+from CCIT.DataGen import *
 
 
 class TestCCIT(TestCase):
     def test_datagen(self):
         allsamples = generate_samples_cos()
         m,n = allsamples.shape
-        print 'CI Samples correctly generated'
+        print('CI Samples correctly generated')
         self.assertTrue(m == 1000)
         self.assertTrue(n == 22)
 
@@ -15,7 +17,7 @@ class TestCCIT(TestCase):
         allsamples = generate_samples_cos()
         pval = CCIT(allsamples[:,0:1],allsamples[:,1:2],allsamples[:,2:22],bootstrap = False)
         pval2 = CCIT(allsamples[:,0:1],allsamples[:,1:2],allsamples[:,2:22],bootstrap = True)
-        print 'pvalue: ' + str(pval)
+        print('pvalue: ' + str(pval))
         self.assertTrue(pval <= 1)
         self.assertTrue(pval2 <= 1)
 

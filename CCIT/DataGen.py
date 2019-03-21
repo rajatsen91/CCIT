@@ -1,3 +1,4 @@
+from __future__ import print_function
 '''Author: Rajat Sen (rajat.sen@utexas.edu), Karthikeyan Shanmugam, Ananada Theertha Suresh
 #Generation of Synthetic data-sets for CI testing simulations 
 	Data-Sets are of three kinds: 
@@ -28,6 +29,7 @@ from sklearn.neighbors import NearestNeighbors
 #####################################################
 
 
+from CCIT.CCIT import *
 
 
 def generate_samples_cos(size = 1000,sType = 'CI',dx = 1,dy = 1,dz = 20,nstd = 0.5,freq = 1.0):
