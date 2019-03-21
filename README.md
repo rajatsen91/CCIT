@@ -30,6 +30,10 @@ from CCIT import DataGen
 
 data = DataGen.generate_samples_cos(dx=1,dy=1,dz=20,sType='NI')  #non-CI dataset, pvalue should be low
 
+X = data[:,0:1]
+Y = data[:,1:2]
+Z = data[:,2::]
+
 pvalue = CCIT.CCIT(X,Y,Z)    #without bootstrap
 
 pvalue = CCIT.CCIT(X,Y,Z,num_iter = 30, bootstrap = True, nthread = 20)  #with 30 bootstrap iterations and 20 threads in parallel. 
