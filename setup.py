@@ -11,7 +11,7 @@ setup(name='CCIT',
       url='https://github.com/rajatsen91/CCIT.git',
       author='Rajat Sen',
       classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python :: 2.7',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
