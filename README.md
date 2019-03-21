@@ -12,11 +12,12 @@ __Usage for pip install__
 2. Now in your python script:
 
 ```python
-from CCIT import *
+from CCIT import CCIT
+from CCIT import DataGen
 
-pvalue = CCIT(X,Y,Z)    #without bootstrap
+pvalue = CCIT.CCIT(X,Y,Z)    #without bootstrap
 
-pvalue = CCIT(X,Y,Z,num_iter = 30, bootstrap = True, nthread = 20)  #with 30 bootstrap iterations and 20 threads in parallel. 
+pvalue = CCIT.CCIT(X,Y,Z,num_iter = 30, bootstrap = True, nthread = 20)  #with 30 bootstrap iterations and 20 threads in parallel. 
 
 
 ```
@@ -46,9 +47,9 @@ This is a comprehensive test and may take some time to run.
 5. Now in your python script:
 
 ```
-from CCIT import *
+from CCIT import CCIT
 
-pvalue = CCIT(X,Y,Z)
+pvalue = CCIT.CCIT(X,Y,Z)
 
 ```
 There may be some trouble in installing the xgboost dependency. In that case it is recommended to follow the steps in https://github.com/dmlc/xgboost/blob/master/python-package/build_trouble_shooting.md for installing xgboost first. Then install CCIT from pip. 
