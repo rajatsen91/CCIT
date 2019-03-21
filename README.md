@@ -9,11 +9,26 @@ __Usage for pip install__
 
 1. ```pip install CCIT==0.3``` or ```sudo -H pip install CCIT==0.3```.
 
-2. Now in your python script:
+2(a). Now in your python script:
 
 ```python
 from CCIT import CCIT
 from CCIT import DataGen
+
+pvalue = CCIT.CCIT(X,Y,Z)    #without bootstrap
+
+pvalue = CCIT.CCIT(X,Y,Z,num_iter = 30, bootstrap = True, nthread = 20)  #with 30 bootstrap iterations and 20 threads in parallel. 
+
+
+```
+
+2(b). If you want to test using the included DataGen module:
+
+```python
+from CCIT import CCIT
+from CCIT import DataGen
+
+data = DataGen.generate_samples_cos(dx=1,dy=1,dz=20,sType='NI')  #non-CI dataset, pvalue should be low
 
 pvalue = CCIT.CCIT(X,Y,Z)    #without bootstrap
 
