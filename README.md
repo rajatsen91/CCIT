@@ -7,7 +7,7 @@ _Please cite the above paper if this package is used in any publication._
 
 __Usage for pip install__
 
-1. ```pip install CCIT==0.3``` or ```sudo -H pip install CCIT==0.3```.
+1. ```pip install CCIT==0.4`` or ```sudo -H pip install CCIT==0.4```.
 
 2(a). Now in your python script:
 

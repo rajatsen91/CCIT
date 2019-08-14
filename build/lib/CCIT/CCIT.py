@@ -346,7 +346,7 @@ def bootstrap_XGB_Independence(max_depths, n_estimators, colsample_bytrees,nfold
     p = R[2]
     s2 = S[2]
     if bootstrap:
-        pval = pvalue(p,s2)
+        pval = pvalue(p,s2/np.sqrt(num_iter))
     else:
         pval = pvalue(p,1/np.sqrt(ntot))
     dic = {}
@@ -386,7 +386,7 @@ def bootstrap_XGB2(max_depths, n_estimators, colsample_bytrees,nfold,feature_sel
     #pval = pd.Series(cleaned[:,1]).apply(lambda g: pvalue(g,s))
     p = np.mean(cleaned[:,3])
     if bootstrap:
-        pval = pvalue(p,s2)
+        pval = pvalue(p,s2/np.sqrt(num_iter))
     else:
         pval = pvalue(p,1/np.sqrt(ntot))
     R = R + [pval]
