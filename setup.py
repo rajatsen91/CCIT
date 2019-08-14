@@ -6,14 +6,14 @@ def readme():
         return f.read()
 
 setup(name='CCIT',
-      version='0.3',
+      version='0.4,
       description='Model Powered CI Test',
       url='https://github.com/rajatsen91/CCIT.git',
       author='Rajat Sen',
       classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: Apache Software License',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
       ],
       author_email='rsen91@gmail.com',
