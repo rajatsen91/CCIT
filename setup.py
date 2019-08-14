@@ -6,7 +6,7 @@ def readme():
         return f.read()
 
 setup(name='CCIT',
-      version='0.4,
+      version='0.4',
       description='Model Powered CI Test',
       url='https://github.com/rajatsen91/CCIT.git',
       author='Rajat Sen',
