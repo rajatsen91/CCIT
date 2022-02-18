@@ -138,9 +138,3 @@ def parallel_cos_sample_gen(nsamples = 1000,dx = 1,dy = 1,dz = 20,nstd = 0.5,fre
 	result = pool.map(cos_helper,inputs)
 	cleaned = [x for x in result if not x is None]
 	pool.close()
-
-
-
-
-
-

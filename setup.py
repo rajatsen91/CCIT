@@ -6,12 +6,12 @@ def readme():
         return f.read()
 
 setup(name='CCIT',
-      version='0.4',
+      version='0.5',
       description='Model Powered CI Test',
       url='https://github.com/rajatsen91/CCIT.git',
       author='Rajat Sen',
       classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Beta',
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python :: 3.7',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
@@ -21,11 +21,11 @@ setup(name='CCIT',
       packages=['CCIT'],
       install_requires=[
           'markdown',
-          'xgboost',
+          'xgboost==1.5.2',
           'pandas',
-          'numpy',
-          'scikit-learn',
-          'scipy',
+          'numpy==1.18.5',
+          'scikit-learn==0.23.1',
+          'scipy==1.4.1',
           'matplotlib'
       ],
       test_suite='nose.collector',
