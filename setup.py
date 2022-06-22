@@ -23,7 +23,7 @@ setup(name='CCIT',
           'markdown',
           'xgboost==1.5.2',
           'pandas',
-          'numpy==1.18.5',
+          'numpy==1.22.0',
           'scikit-learn==0.23.1',
           'scipy==1.4.1',
           'matplotlib'
