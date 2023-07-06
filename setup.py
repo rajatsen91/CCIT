@@ -25,7 +25,7 @@ setup(name='CCIT',
           'pandas',
           'numpy==1.18.5',
           'scikit-learn==0.23.1',
-          'scipy==1.4.1',
+          'scipy==1.10.0',
           'matplotlib'
       ],
       test_suite='nose.collector',
